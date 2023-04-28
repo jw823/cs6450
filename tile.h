@@ -5,13 +5,10 @@
 class CHA
 {
 public:
-    CHA();
+    CHA(int chaId);
 
 private:
     int chaId;
-    // CHA ID -> Tile ID
-    // use static hash function for now to convert memory address to CHA ID
-    std::unordered_map<int, int> chaIdToTile;
 };
 
 class LLCSlice
@@ -25,7 +22,6 @@ private:
     // 0: not inside slice
     // 1: yes inside slice
     std::unordered_map<std::string, int> llcSliceMap;
-    CHA cha;
 };
 
 class Tile
@@ -40,7 +36,7 @@ class CoreTile
 {
 public:
     // Constructor
-    CoreTile(int coreId, LLCSlice* llcslice);
+    CoreTile(int coreId, int sliceId, int chaId);
     // Will return:
     // 0: if from memory
     // 1: if from LLC slice
@@ -55,5 +51,8 @@ private:
     std::unordered_map<std::string, int> l2Cache;
 
     // LLC Slice
-    LLCSlice LLCSlice;
+    LLCSlice* llcslice;
+
+    // CHA
+    CHA* cha;
 };
