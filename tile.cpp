@@ -29,6 +29,24 @@ CoreTile::CoreTile(int coreId, int sliceId, int chaId)
 int main()
 {
     std::cout << "Hello World" << std::endl;
+    const int ROWS = 2;
+    const int COLS = 2;
+
+    Tile tiles[ROWS][COLS];
+
+    CoreTile coreTile(0, 1, 2);
+    Tile *tileOnePtr = new CoreTile(0, 1, 2);
+    Tile *tileTwoPtr = new CoreTile(1, 2, 3);
+
+    // Assign a value to an element of the array
+    tiles[0][0] = *tileOnePtr;
+
+    // Assign a value to an element of the array
+    tiles[0][1] = *tileTwoPtr;
+
+    // Access the value of an element of the array
+    Tile objOne = tiles[0][0];
+    Tile objTwo = tiles[0][1];
 
     // instantiate: we need to figure out how to input "instructions"
     // CoreTile *coreZero = new CoreTile(0);
