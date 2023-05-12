@@ -49,23 +49,21 @@ int main()
     const int ROWS = 2;
     const int COLS = 2;
 
+    Tile tiles[ROWS][COLS];
 
-// // Do we want the class function inside main?
-// // Define the object type
-// class MyClass {
-//     // define the class members here
-// };
+    CoreTile coreTile(0, 1, 2);
+    Tile *tileOnePtr = new CoreTile(0, 1, 2);
+    Tile *tileTwoPtr = new CoreTile(1, 2, 3);
 
-// Create the 2D array of objects
-Tile tiles[ROWS][COLS];
-CoreTile coreTile(0, 1, 2);
-Tile* coreZeroPtr = new CoreTile(0, 1, 2);
-// Assign a value to an element of the array
-tiles[0][0] = *coreZeroPtr;
+    // Assign a value to an element of the array
+    tiles[0][0] = *tileOnePtr;
 
+    // Assign a value to an element of the array
+    tiles[0][1] = *tileTwoPtr;
 
-// Access the value of an element of the array
-MyClass obj = myArray[1][2];
+    // Access the value of an element of the array
+    Tile objOne = tiles[0][0];
+    Tile objTwo = tiles[0][1];
 
 // Loop through the elements of the array
 for (int i = 0; i < ROWS; i++) {

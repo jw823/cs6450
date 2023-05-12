@@ -32,7 +32,7 @@ public:
     // Gonna need other virtual functions: virtual int getTileType() const = 0;
 };
 
-class CoreTile : public Tile
+class CoreTile: public Tile
 {
 public:
     // Constructor
