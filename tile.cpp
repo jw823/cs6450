@@ -7,6 +7,9 @@
 // use static hash function for now to convert memory address to CHA ID
 std::unordered_map<int, int> chaIdToTile;
 
+// Priority queue where requests will be pushed when they are sent
+// initialize here
+
 CHA::CHA(int chaId)
 {
     this->chaId = chaId;
@@ -26,10 +29,50 @@ CoreTile::CoreTile(int coreId, int sliceId, int chaId)
     this->cha = new CHA(chaId);
 }
 
+// ok me comment my ideas while u chatgpt
+
+// communicating between tiles: use their coordinates
+// rn we need to write the sendRequest function - i think it needs to create a request object and add it to the queue
+// request object: (request id, tile id)
+// basically, it should get an instruction, and then it will compute the cha ID using hash function, then figure out what tile to go to
+// 
+int CoreTile::sendRequest(int memoryAddress) {
+    // use static hash function to turn memory addr into cha id
+    // use map from cha id to get corresponding tile id
+    // create request object with request id and tile id
+    // add to queue
+}
+
 int main()
 {
     std::cout << "Hello World" << std::endl;
+    const int ROWS = 2;
+    const int COLS = 2;
 
+
+// // Do we want the class function inside main?
+// // Define the object type
+// class MyClass {
+//     // define the class members here
+// };
+
+// Create the 2D array of objects
+Tile tiles[ROWS][COLS];
+CoreTile coreTile(0, 1, 2);
+Tile* coreZeroPtr = new CoreTile(0, 1, 2);
+// Assign a value to an element of the array
+tiles[0][0] = *coreZeroPtr;
+
+
+// Access the value of an element of the array
+MyClass obj = myArray[1][2];
+
+// Loop through the elements of the array
+for (int i = 0; i < ROWS; i++) {
+    for (int j = 0; j < COLS; j++) {
+        // Do something with myArray[i][j]
+    }
+}
     // instantiate: we need to figure out how to input "instructions"
     // CoreTile *coreZero = new CoreTile(0);
     // CoreTile *coreOne = new CoreTile(1);
@@ -41,3 +84,5 @@ int main()
     // Remember to delete the dynamically allocated object when done
     //  delete myObjPtr;
 }
+
+

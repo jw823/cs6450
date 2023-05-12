@@ -32,7 +32,7 @@ public:
     // Gonna need other virtual functions: virtual int getTileType() const = 0;
 };
 
-class CoreTile
+class CoreTile : public Tile
 {
 public:
     // Constructor
@@ -41,7 +41,7 @@ public:
     // 0: if from memory
     // 1: if from LLC slice
     // 2: if from L2 cache
-    int sendRequest();
+    int sendRequest(int memoryAddress);
 
 private:
     // For us to identify what tile it is.
@@ -55,4 +55,31 @@ private:
 
     // CHA
     CHA* cha;
+};
+
+class Request
+{
+public:
+    bool is_first_command;
+    long addr;
+    // long addr_row;
+    std::vector<int> addr_vec;
+    // specify which core this request sent from, for virtual address translation
+    int coreid;
+    uint32_t req_id;
+
+    enum class Type
+    {
+        READ,
+        WRITE,
+    } type;
+
+    long arrive = -1;
+    long depart = -1;
+    std::function<void(Request&)> callback; // call back with more info
+
+    Request(long addr, Type type, int coreid = 0)
+        : is_first_command(true), addr(addr), coreid(coreid), type(type),
+      callback([](Request& req){}) {}
+
 };
