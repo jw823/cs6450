@@ -17,12 +17,13 @@
 // TODO: run the simulation on extremely constraint example
 
 #define MAX_INSTRUCTION_LIMIT_PER_AGENT 100000
+#define CPU_INFLIGHT_REQUEST_LIMIT 10
 
 Generator::Generator(uint32_t num_cha_agents)
 {
     // TODO: Need to create an agent type for IMC tiles
     // These tiles still need to communicate with the Core tiles
-    this->max_total_instructions = std::min((uint32_t)500000, (cha_agents) * (MAX_INSTRUCTION_LIMIT_PER_AGENT));
+    this->max_total_instructions = std::min((uint32_t)500000, (num_cha_agents) * (MAX_INSTRUCTION_LIMIT_PER_AGENT));
 
     // TODO: initialize the LLC with randomly generated dirty lines
     // For now, we assume all LLC's are empty and all requests are fresh
@@ -35,14 +36,13 @@ Generator::Generator(uint32_t num_cha_agents)
     // ID for agent will be the tuple which is the (x, y) coordinate of the tile it's in
     for (int i = 0; i < num_cha_agents; i++)
     {
-        this->agents.push_back(new CHA(0, i, /* (x, y) */, this));
+        this->agents.push_back(new CHA(i, /* (x, y) */ this));
     }
 }
 
-CHA::CHA(uint32_t type, uint32_t id, /* tuple coordinate */ Generator *generator)
+CHA::CHA(uint32_t id, /* tuple coordinate */ Generator *generator)
 {
     this->id = id;
-    this->type = type;
     this->max_inflight_instruction_limit = CPU_INFLIGHT_REQUEST_LIMIT;
     this->max_instructions_to_serve = MAX_INSTRUCTION_LIMIT_PER_AGENT;
     this->inflight_instructions = 0;
@@ -58,7 +58,7 @@ CHA::CHA(uint32_t type, uint32_t id, /* tuple coordinate */ Generator *generator
 
 void CHA::begin()
 {
-    assert(this->== 0);
+    // assert(this-> == 0);
     assert(this->served_instructions == 0);
     assert(this->total_instructions == 0);
     // assert(this->generator->total_instructions_sent == 0);
@@ -69,7 +69,7 @@ void CHA::begin()
     }
 }
 
-RequestAgent::sendRequest()
+bool CHA::sendRequest()
 {
 
     // TODO: currently, we hardcode the addr and ins_type
@@ -108,7 +108,7 @@ bool Generator::get_next_request(long &addr, uint32_t &agent_id, uint32_t &req_i
 
     if (this->requests_to_send.size() > 0)
     {
-        auto pair = this->requests_to_send.top();
+        auto pair = this->requests_to_send.front();
         // TODO: set the current time based off of something
         // long cur_time = this->memory_dram_cycles;
         // long req_creation_time = std::get<4>(pair);
@@ -124,15 +124,12 @@ bool Generator::get_next_request(long &addr, uint32_t &agent_id, uint32_t &req_i
 
         // TODO: implement the check on time
         // if (cur_time >= req_creation_time + req_lat)
-        
-        addr = std::get<0>(pair);
-        type = std::get<1>(pair);
-        agent_id = std::get<2>(pair);
-        req_id = std::get<3>(pair);
-        agent_type = std::get<7>(pair);
+
+        addr = pair.addr;
+        agent_id = pair.agent_id;
+        req_id = pair.req_id;
         this->requests_to_send.pop();
         return true;
-        
     }
 }
 
@@ -145,10 +142,10 @@ std::unordered_map<int, int> chaIdToTile;
 // Priority queue where requests will be pushed when they are sent
 // initialize here
 
-CHA::CHA(int chaId)
-{
-    this->chaId = chaId;
-}
+// CHA::CHA(int chaId)
+// {
+//     this->chaId = chaId;
+// }
 
 LLCSlice::LLCSlice(int sliceId)
 {
@@ -156,26 +153,26 @@ LLCSlice::LLCSlice(int sliceId)
     this->llcSliceMap = {};
 }
 
-CoreTile::CoreTile(int coreId, int sliceId, int chaId)
-{
-    this->coreId = coreId;
-    this->l2Cache = {};
-    this->llcslice = new LLCSlice(sliceId);
-    this->cha = new CHA(chaId);
-}
+// CoreTile::CoreTile(int coreId, int sliceId, int chaId)
+// {
+//     this->coreId = coreId;
+//     this->l2Cache = {};
+//     this->llcslice = new LLCSlice(sliceId);
+//     this->cha = new CHA(chaId);
+// }
 
 // communicating between tiles: use their coordinates
 // rn we need to write the sendRequest function - i think it needs to create a request object and add it to the queue
 // request object: (request id, tile id)
 // basically, it should get an instruction, and then it will compute the cha ID using hash function, then figure out what tile to go to
 //
-int CoreTile::sendRequest(int memoryAddress)
-{
-    // use static hash function to turn memory addr into cha id
-    // use map from cha id to get corresponding tile id
-    // create request object with request id and tile id
-    // add to queue
-}
+// int CoreTile::sendRequest(int memoryAddress)
+// {
+//     // use static hash function to turn memory addr into cha id
+//     // use map from cha id to get corresponding tile id
+//     // create request object with request id and tile id
+//     // add to queue
+// }
 
 int main()
 {
