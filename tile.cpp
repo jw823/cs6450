@@ -3,17 +3,7 @@
 #include <iostream>
 #include "tile.h"
 
-// TODO: leave a comment at the top expressing our constraints
-// TODO: create the wrapper function
-// TODO: fix the build errors and define the classes needed
-// TODO: add the tuple for the coordinate and calculate the time for routing
-
-// Both: investigate run_wrapper in main, and take notes on how to implement it
-// Both: take notes on how to calculate the distance
-// Both: brainstorm how to get around contention
-// Bahar: define generator class and fix related functions
-// Jessie: define CHA class based off of RequestAgent class (RequestAgent.h); all classes go in tile.h and fix related functions
-
+// TODO: implement main function to run generator
 // TODO: run the simulation on extremely constraint example
 
 #define MAX_INSTRUCTION_LIMIT_PER_AGENT 100000
